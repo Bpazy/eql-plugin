@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.bpazy</id>
     <name>eql-plugin</name>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <vendor email="dummy" url="dummy">dummy</vendor>
 
     <description><![CDATA[
@@ -9,6 +9,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
+      Release 0.0.2: Jump to eql file.<br>
       Release 0.0.1: Initial release.<br>
     ]]>
     </change-notes>
@@ -24,7 +25,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <intentionAction>
-            <className>JumpToEqlIntention</className>
+            <className>com.github.bpazy.JumpToEqlIntention</className>
         </intentionAction>
     </extensions>
 </idea-plugin>

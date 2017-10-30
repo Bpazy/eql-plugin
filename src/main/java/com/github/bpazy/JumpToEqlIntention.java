@@ -1,16 +1,16 @@
+package com.github.bpazy;
+
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
 import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.tree.java.PsiJavaTokenImpl;
+import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.impl.source.tree.java.PsiMethodCallExpressionImpl;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.Nls;
@@ -46,11 +46,24 @@ public class JumpToEqlIntention extends BaseIntentionAction {
         if (psiElement == null) {
             return false;
         }
-        Document document = editor.getDocument();
-        int lineNumber = document.getLineNumber(((PsiJavaTokenImpl) psiElement).getStartOffset());
 
-        String text = psiElement.getText();
+        PsiElement psiElement1 = extraEqlStatement(psiElement);
+        if (!(psiElement1 instanceof PsiMethodCallExpressionImpl)) {
+            return false;
+        }
+        String text = ((PsiReferenceExpression) psiElement1.getFirstChild()).getCanonicalText();
         return text.contains("new Eql") || text.contains("new Dql");
+    }
+
+    private PsiElement extraEqlStatement(PsiElement element) {
+        if (element == null) return null;
+        PsiElement parent = element.getParent();
+        for (int i = 0; i < 4; i++) {
+            PsiElement parent1 = parent.getParent();
+            if (parent1 == null) break;
+            parent = parent1;
+        }
+        return parent;
     }
 
     @Override
@@ -60,7 +73,7 @@ public class JumpToEqlIntention extends BaseIntentionAction {
         if (psiElement == null) {
             return;
         }
-        String methodName = psiElement.getText();
+        String methodName = psiElement.getText().replace("\"", "");
         String eqlFileName = psiFile.getName().replace(".java", ".eql");
 
         PsiFile[] files = PsiShortNamesCache.getInstance(project).getFilesByName(eqlFileName);
@@ -69,15 +82,22 @@ public class JumpToEqlIntention extends BaseIntentionAction {
             Editor eqlEditor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
             if (eqlEditor == null) return;
 
-            BufferedReader reader = new BufferedReader(new StringReader(eqlFileName));
+            BufferedReader reader = new BufferedReader(new StringReader(eqlEditor.getDocument().getText()));
             try {
                 int lineNum = 0;
                 String s;
                 while ((s = reader.readLine()) != null) {
-                    if (s.contains("--[" + methodName + "]")) break;
+                    if (s.matches("--\\s*\\[" + methodName + "]")) break;
                     lineNum++;
                 }
-                CaretModel caretModel = editor.getCaretModel();
+
+                // s 为空则eql文件不含有对应函数
+                if (s == null) {
+                    break;
+                }
+
+                // 跳转到eql文件中函数的位置
+                CaretModel caretModel = eqlEditor.getCaretModel();
                 LogicalPosition logicalPosition = caretModel.getLogicalPosition();
                 logicalPosition.leanForward(true);
                 LogicalPosition logical = new LogicalPosition(lineNum, logicalPosition.column);
