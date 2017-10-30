@@ -1,11 +1,11 @@
 <idea-plugin>
-    <id>org.jetbrains</id>
-    <name>my_plugin</name>
+    <id>com.github.bpazy</id>
+    <name>eql-plugin</name>
     <version>0.0.1</version>
     <vendor email="dummy" url="dummy">dummy</vendor>
 
     <description><![CDATA[
-      Sample plugin.<br>
+      Eql plugin.<br>
     ]]></description>
 
     <change-notes><![CDATA[
@@ -24,15 +24,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <intentionAction>
-            <className>QuickFix</className>
+            <className>JumpToEqlIntention</className>
         </intentionAction>
     </extensions>
-
-    <actions>
-        <action id="GoToMapperAction" class="GoToMapperAction" text="GoToMapperAction" description="GoToMapperAction">
-            <add-to-group group-id="JavaGenerateGroup1" anchor="first"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl X"/>
-        </action>
-    </actions>
-
 </idea-plugin>
