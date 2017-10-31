@@ -8,9 +8,9 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReferenceExpression;
-import com.intellij.psi.impl.source.tree.java.PsiMethodCallExpressionImpl;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.Nls;
@@ -47,23 +47,22 @@ public class JumpToEqlIntention extends BaseIntentionAction {
             return false;
         }
 
+        if (psiElement instanceof PsiWhiteSpace) {
+            psiElement = psiElement.getPrevSibling();
+        }
         PsiElement psiElement1 = extraEqlStatement(psiElement);
-        if (!(psiElement1 instanceof PsiMethodCallExpressionImpl)) {
+        if (psiElement1 == null) {
             return false;
         }
-        String text = ((PsiReferenceExpression) psiElement1.getFirstChild()).getCanonicalText();
+        String text = psiElement1.getText();
         return text.contains("new Eql") || text.contains("new Dql");
     }
 
     private PsiElement extraEqlStatement(PsiElement element) {
-        if (element == null) return null;
-        PsiElement parent = element.getParent();
-        for (int i = 0; i < 4; i++) {
-            PsiElement parent1 = parent.getParent();
-            if (parent1 == null) break;
-            parent = parent1;
+        if (element == null || element instanceof PsiExpressionStatement) {
+            return element;
         }
-        return parent;
+        return extraEqlStatement(element.getParent());
     }
 
     @Override
