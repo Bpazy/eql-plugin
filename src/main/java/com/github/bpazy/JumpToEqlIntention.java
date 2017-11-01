@@ -74,7 +74,7 @@ public class JumpToEqlIntention extends BaseIntentionAction {
 
         PsiFile[] files = PsiShortNamesCache.getInstance(project).getFilesByName(eqlFileName);
         for (PsiFile file : files) {
-            int lineNum = existEqlMethod(file, methodName);
+            int lineNum = seekEqlMethod(file, methodName);
             if (lineNum == NOT_EXIST_EQL_METHOD) {
                 continue;
             }
@@ -105,7 +105,7 @@ public class JumpToEqlIntention extends BaseIntentionAction {
      * @param methodName 函数名称
      * @return 函数所在行号，-1则不存在
      */
-    private int existEqlMethod(PsiFile file, String methodName) {
+    private int seekEqlMethod(PsiFile file, String methodName) {
         Document document = FileDocumentManager.getInstance().getCachedDocument(file.getVirtualFile());
         if (document == null) {
             return NOT_EXIST_EQL_METHOD;
