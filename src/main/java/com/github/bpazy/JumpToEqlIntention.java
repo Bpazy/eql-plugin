@@ -9,16 +9,14 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiExpressionStatement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.*;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -46,6 +44,10 @@ public class JumpToEqlIntention extends BaseIntentionAction {
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile psiFile) {
         int offset = editor.getCaretModel().getOffset();
+        if (!(psiFile instanceof PsiJavaFile)) {
+            return false;
+        }
+
         PsiElement psiElement = psiFile.findElementAt(offset);
         if (psiElement == null) {
             return false;
@@ -71,10 +73,11 @@ public class JumpToEqlIntention extends BaseIntentionAction {
         }
         String methodName = psiElement.getText().replace("\"", "");
         String eqlFileName = psiFile.getName().replace(".java", ".eql");
+        String packageName = ((PsiJavaFile) psiFile).getPackageName();
 
         PsiFile[] files = PsiShortNamesCache.getInstance(project).getFilesByName(eqlFileName);
         for (PsiFile file : files) {
-            int lineNum = seekEqlMethod(file, methodName);
+            int lineNum = seekEqlMethod(packageName, file, methodName);
             if (lineNum == NOT_EXIST_EQL_METHOD) {
                 continue;
             }
@@ -101,17 +104,31 @@ public class JumpToEqlIntention extends BaseIntentionAction {
 
     /**
      * Eql文件中对应函数行号
-     * @param file eql文件
-     * @param methodName 函数名称
+     *
+     * @param packageName
+     * @param file        eql文件
+     * @param methodName  函数名称
      * @return 函数所在行号，-1则不存在
      */
-    private int seekEqlMethod(PsiFile file, String methodName) {
+    private int seekEqlMethod(String packageName, PsiFile file, String methodName) {
         Document document = FileDocumentManager.getInstance().getCachedDocument(file.getVirtualFile());
         if (document == null) {
             return NOT_EXIST_EQL_METHOD;
         }
         String text = document.getText();
         BufferedReader reader = new BufferedReader(new StringReader(text));
+        String path = file.getVirtualFile().getPath();
+
+        String[] split = path.split("resources/");
+        if (split.length < 2) {
+            return NOT_EXIST_EQL_METHOD;
+        }
+        String eqlFilePackageName = split[1]
+                .substring(0, split[1].lastIndexOf('/'))
+                .replaceAll("/", ".");
+        if (!packageName.equals(eqlFilePackageName)) {
+            return NOT_EXIST_EQL_METHOD;
+        }
 
         try {
             int lineNum = 0;
