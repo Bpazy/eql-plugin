@@ -117,8 +117,8 @@ public class JumpToEqlIntention extends BaseIntentionAction {
         }
         String text = document.getText();
         BufferedReader reader = new BufferedReader(new StringReader(text));
-        String path = file.getVirtualFile().getPath();
 
+        String path = file.getVirtualFile().getPath();
         String[] split = path.split("resources/");
         if (split.length < 2) {
             return NOT_EXIST_EQL_METHOD;
