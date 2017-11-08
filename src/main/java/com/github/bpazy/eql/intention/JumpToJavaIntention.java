@@ -1,4 +1,4 @@
-package com.github.bpazy;
+package com.github.bpazy.eql.intention;
 
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
 import com.intellij.openapi.editor.CaretModel;
@@ -9,8 +9,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.search.PsiShortNamesCache;
@@ -32,7 +31,7 @@ import java.util.regex.Pattern;
 public class JumpToJavaIntention extends BaseIntentionAction {
     private static final int NOT_EXIST_JAVA_METHOD = -1;
 
-    private Pattern pattern = Pattern.compile("\\[*.+]");
+    private Pattern pattern = Pattern.compile("--\\s*\\[(.+)]");
 
     @NotNull
     @Override
@@ -49,27 +48,31 @@ public class JumpToJavaIntention extends BaseIntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        int offset = editor.getCaretModel().getOffset();
-        PsiElement psiElement = file.findElementAt(offset);
-        return psiElement != null && psiElement instanceof PsiComment;
+        int startOffset = editor.getCaretModel().getVisualLineStart();
+        int endOffset = editor.getCaretModel().getVisualLineEnd();
+        String text = editor.getDocument().getText(new TextRange(startOffset, endOffset));
+        if (StringUtils.isEmpty(text)) {
+            return false;
+        }
+
+        Matcher matcher = pattern.matcher(text);
+        return matcher.find();
     }
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        String javaFileName = file.getText().replace(".eql", ".java");
+        String javaFileName = file.getName().replace(".eql", ".java");
 
-        int offset = editor.getCaretModel().getOffset();
-        PsiElement psiElement = file.findElementAt(offset);
-        if (psiElement == null) {
+        int startOffset = editor.getCaretModel().getVisualLineStart();
+        int endOffset = editor.getCaretModel().getVisualLineEnd();
+        String text = editor.getDocument().getText(new TextRange(startOffset, endOffset));
+
+        Matcher matcher = pattern.matcher(text);
+        if (!matcher.find()) {
             return;
         }
-        String statement = psiElement.getText();
-        Matcher matcher = pattern.matcher(statement);
+        String methodName = matcher.group(1);
 
-        String methodName = "";
-        if (matcher.find()) {
-            methodName = matcher.group(1);
-        }
         if (StringUtils.isEmpty(methodName)) {
             return;
         }
@@ -90,11 +93,11 @@ public class JumpToJavaIntention extends BaseIntentionAction {
                 continue;
             }
 
-            // 打开对应eql文件
+            // 打开对应java文件
             OpenFileDescriptor descriptor = new OpenFileDescriptor(project, file1.getVirtualFile());
             Editor eqlEditor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
             if (eqlEditor == null) return;
-            // 跳转到eql文件中函数的位置
+            // 跳转到java文件中函数的位置
             CaretModel caretModel = eqlEditor.getCaretModel();
             LogicalPosition logicalPosition = caretModel.getLogicalPosition();
             logicalPosition.leanForward(true);
@@ -120,7 +123,7 @@ public class JumpToJavaIntention extends BaseIntentionAction {
             int lineNum = 0;
             String s;
             while ((s = reader.readLine()) != null) {
-                if (s.matches(methodName)) return lineNum;
+                if (s.contains(methodName)) return lineNum;
                 lineNum++;
             }
         } catch (IOException e) {

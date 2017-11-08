@@ -2,7 +2,7 @@
     <id>com.github.bpazy</id>
     <name>eql-plugin</name>
     <version>0.0.2</version>
-    <vendor email="dummy" url="dummy">dummy</vendor>
+    <vendor email="hanziyuan08@outlook.com" url="https://github.com/Bpazy/eql-plugin">dummy</vendor>
 
     <description><![CDATA[
       Eql plugin.<br>
@@ -24,8 +24,13 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
+        <!--<fileTypeFactory implementation="com.github.bpazy.eql.language.EqlFileTypeFactory"/>-->
+        <!--<lang.parserDefinition language="Eql" implementationClass="com.github.bpazy.eql.language.EqlParserDefinition"/>-->
+
         <intentionAction>
-            <className>com.github.bpazy.JumpToEqlIntention</className>
+            <className>com.github.bpazy.eql.intention.JumpToEqlIntention</className>
+            <className>com.github.bpazy.eql.intention.JumpToJavaIntention</className>
         </intentionAction>
+
     </extensions>
 </idea-plugin>
