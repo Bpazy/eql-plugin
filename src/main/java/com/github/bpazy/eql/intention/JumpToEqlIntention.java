@@ -112,7 +112,10 @@ public class JumpToEqlIntention extends BaseIntentionAction {
     }
 
     private PsiElement extraEqlStatement(PsiElement element) {
-        if (element == null || element instanceof PsiExpressionStatement) {
+        if (element == null ||
+                element instanceof PsiExpressionStatement ||
+                element instanceof PsiReturnStatement ||
+                element instanceof PsiDeclarationStatement) {
             return element;
         }
         return extraEqlStatement(element.getParent());
