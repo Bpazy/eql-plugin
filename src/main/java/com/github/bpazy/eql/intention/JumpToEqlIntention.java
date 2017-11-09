@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author ziyuan
@@ -26,6 +28,7 @@ import java.io.StringReader;
 public class JumpToEqlIntention extends BaseIntentionAction {
 
     private final int NOT_EXIST_EQL_METHOD = -1;
+    private final Pattern pattern = Pattern.compile("new (?:Dql|Eql).+(?:insert|delete|select)\\(\"(.+)\"\\)");
 
     @NotNull
     @Override
@@ -70,7 +73,7 @@ public class JumpToEqlIntention extends BaseIntentionAction {
         if (psiElement == null) {
             return;
         }
-        String methodName = psiElement.getText().replace("\"", "");
+        String methodName = findEqlMethodName(psiElement);
         String eqlFileName = psiFile.getName().replace(".java", ".eql");
         String packageName = ((PsiJavaFile) psiFile).getPackageName();
 
@@ -92,6 +95,20 @@ public class JumpToEqlIntention extends BaseIntentionAction {
             LogicalPosition logical = new LogicalPosition(lineNum, logicalPosition.column);
             caretModel.moveToLogicalPosition(logical);
         }
+    }
+
+    private String findEqlMethodName(PsiElement psiElement) {
+        if (psiElement instanceof PsiMethodCallExpression) {
+            String methodCallExpression = psiElement.getText();
+            Matcher matcher = pattern.matcher(methodCallExpression);
+            if (matcher.find()) {
+                return matcher.group(1);
+            }
+        }
+        if (psiElement instanceof PsiMethod) {
+            return ((PsiMethod) psiElement).getName();
+        }
+        return findEqlMethodName(psiElement.getParent());
     }
 
     private PsiElement extraEqlStatement(PsiElement element) {

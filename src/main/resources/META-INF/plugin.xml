@@ -29,6 +29,8 @@
 
         <intentionAction>
             <className>com.github.bpazy.eql.intention.JumpToEqlIntention</className>
+        </intentionAction>
+        <intentionAction>
             <className>com.github.bpazy.eql.intention.JumpToJavaIntention</className>
         </intentionAction>
 
