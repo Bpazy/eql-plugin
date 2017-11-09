@@ -7,3 +7,5 @@ jflex-1.7.0-SNAPSHOT.jar
 # eql language support
 src/main/gen
 src/main/java/com/github/bpazy/eql/language
+
+gradle.properties
