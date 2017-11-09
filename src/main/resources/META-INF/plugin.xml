@@ -1,14 +1,15 @@
 <idea-plugin>
     <id>com.github.bpazy</id>
     <name>eql-plugin</name>
-    <version>0.0.2</version>
-    <vendor email="hanziyuan08@outlook.com" url="https://github.com/Bpazy/eql-plugin">dummy</vendor>
+    <version>0.1.0</version>
+    <vendor email="hanziyuan08@outlook.com" url="https://github.com/Bpazy/eql-plugin">Bpazy</vendor>
 
     <description><![CDATA[
       Eql plugin.<br>
     ]]></description>
 
     <change-notes><![CDATA[
+      Release 0.1.0: Java <=> Eql<br>
       Release 0.0.2: Jump to eql file.<br>
       Release 0.0.1: Initial release.<br>
     ]]>
