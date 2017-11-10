@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 public class JumpToEqlIntention extends BaseIntentionAction {
 
     private final int NOT_EXIST_EQL_METHOD = -1;
-    private final Pattern pattern = Pattern.compile("new (?:Dql|Eql).+(?:insert|delete|select)\\(\"(.+)\"\\)");
+    private final Pattern pattern = Pattern.compile("new (?:Dql|Eql).+(?:insert|delete|select|update)\\(\"(.+)\"\\)");
 
     @NotNull
     @Override
