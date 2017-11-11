@@ -31,7 +31,6 @@ dependencies {
 }
 
 intellij {
-    version '181-SNAPSHOT'
     pluginName 'eql-plugin'
     intellij.updateSinceUntilBuild true // Disables updating since-build attribute in plugin.xml
     publish {
