@@ -1,4 +1,4 @@
 eql-plugin
 ===========
 :smile:
-Here would have a preview gif.
+这里应该有一张gif预览图。
