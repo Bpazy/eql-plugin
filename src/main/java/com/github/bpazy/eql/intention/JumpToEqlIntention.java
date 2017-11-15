@@ -46,22 +46,17 @@ public class JumpToEqlIntention extends BaseIntentionAction {
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile psiFile) {
         int offset = editor.getCaretModel().getOffset();
-        if (!(psiFile instanceof PsiJavaFile)) {
-            return false;
-        }
+        if (!(psiFile instanceof PsiJavaFile)) return false;
 
         PsiElement psiElement = psiFile.findElementAt(offset);
-        if (psiElement == null) {
-            return false;
-        }
+        if (psiElement == null) return false;
 
         if (psiElement instanceof PsiWhiteSpace) {
             psiElement = psiElement.getPrevSibling();
         }
         PsiElement psiElement1 = extraEqlStatement(psiElement);
-        if (psiElement1 == null) {
-            return false;
-        }
+        if (psiElement1 == null) return false;
+
         String text = psiElement1.getText();
         return text.contains("new Eql") || text.contains("new Dql");
     }
@@ -70,9 +65,8 @@ public class JumpToEqlIntention extends BaseIntentionAction {
     public void invoke(@NotNull Project project, Editor editor, PsiFile psiFile) throws IncorrectOperationException {
         int offset = editor.getCaretModel().getOffset();
         PsiElement psiElement = psiFile.findElementAt(offset);
-        if (psiElement == null) {
-            return;
-        }
+        if (psiElement == null) return;
+
         String methodName = findEqlMethodName(psiElement);
         String eqlFileName = psiFile.getName().replace(".java", ".eql");
         String packageName = ((PsiJavaFile) psiFile).getPackageName();
@@ -80,9 +74,7 @@ public class JumpToEqlIntention extends BaseIntentionAction {
         PsiFile[] files = PsiShortNamesCache.getInstance(project).getFilesByName(eqlFileName);
         for (PsiFile file : files) {
             int lineNum = seekEqlMethod(packageName, file, methodName);
-            if (lineNum == NOT_EXIST_EQL_METHOD) {
-                continue;
-            }
+            if (lineNum == NOT_EXIST_EQL_METHOD) continue;
 
             // 打开对应eql文件
             OpenFileDescriptor descriptor = new OpenFileDescriptor(project, file.getVirtualFile());
@@ -124,7 +116,7 @@ public class JumpToEqlIntention extends BaseIntentionAction {
     /**
      * Eql文件中对应函数行号
      *
-     * @param packageName
+     * @param packageName java文件的package
      * @param file        eql文件
      * @param methodName  函数名称
      * @return 函数所在行号，-1则不存在

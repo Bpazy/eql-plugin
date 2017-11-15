@@ -26,7 +26,6 @@ import java.util.stream.Stream;
  * created on 2017/11/7
  */
 public class JumpToJavaIntention extends BaseIntentionAction {
-    private static final int NOT_EXIST_JAVA_METHOD = -1;
 
     private Pattern pattern = Pattern.compile("--\\s*\\[(.+)]");
 
@@ -47,10 +46,9 @@ public class JumpToJavaIntention extends BaseIntentionAction {
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         int startOffset = editor.getCaretModel().getVisualLineStart();
         int endOffset = editor.getCaretModel().getVisualLineEnd();
+
         String text = editor.getDocument().getText(new TextRange(startOffset, endOffset));
-        if (StringUtils.isEmpty(text)) {
-            return false;
-        }
+        if (StringUtils.isEmpty(text)) return false;
 
         Matcher matcher = pattern.matcher(text);
         return matcher.find();
@@ -65,14 +63,10 @@ public class JumpToJavaIntention extends BaseIntentionAction {
         String text = editor.getDocument().getText(new TextRange(startOffset, endOffset));
 
         Matcher matcher = pattern.matcher(text);
-        if (!matcher.find()) {
-            return;
-        }
-        String methodName = matcher.group(1);
+        if (!matcher.find()) return;
 
-        if (StringUtils.isEmpty(methodName)) {
-            return;
-        }
+        String methodName = matcher.group(1);
+        if (StringUtils.isEmpty(methodName)) return;
 
         String path = file.getVirtualFile().getPath();
         String[] split = path.split("resources/");
@@ -86,13 +80,11 @@ public class JumpToJavaIntention extends BaseIntentionAction {
         PsiFile[] files = PsiShortNamesCache.getInstance(project).getFilesByName(javaFileName);
         for (PsiFile file1 : files) {
             PsiElement methodElement = seekJavaMethod(eqlFilePackageName, file1, methodName);
-            if (methodElement == null) {
-                continue;
-            }
+            if (methodElement == null) continue;
+
             Document document = PsiDocumentManager.getInstance(project).getDocument(file1);
-            if (document == null) {
-                continue;
-            }
+            if (document == null) continue;
+
             int textOffset = methodElement.getTextOffset();
             int lineNumber = document.getLineNumber(textOffset);
 
@@ -100,6 +92,7 @@ public class JumpToJavaIntention extends BaseIntentionAction {
             OpenFileDescriptor descriptor = new OpenFileDescriptor(project, file1.getVirtualFile());
             Editor eqlEditor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
             if (eqlEditor == null) return;
+
             // 跳转到java文件中函数的位置
             CaretModel caretModel = eqlEditor.getCaretModel();
             LogicalPosition logicalPosition = caretModel.getLogicalPosition();
@@ -109,17 +102,18 @@ public class JumpToJavaIntention extends BaseIntentionAction {
         }
     }
 
+    /**
+     * 查找Java方法
+     * @param eqlFilePackageName eql文件对应的packageName
+     * @param file Java对应文件的PsiFile
+     * @param methodName 方法名称
+     * @return 查找到的Java方法，没有则返回null
+     */
     private PsiElement seekJavaMethod(String eqlFilePackageName, PsiFile file, String methodName) {
         String packageName = ((PsiJavaFile) file).getPackageName();
-        if (!eqlFilePackageName.equals(packageName)) {
-            return null;
-        }
+        if (!eqlFilePackageName.equals(packageName)) return null;
 
-        PsiElement methodElement = findMethod(file, methodName);
-        if (methodElement == null) {
-            return null;
-        }
-        return methodElement;
+        return findMethod(file, methodName);
     }
 
     private PsiElement findMethod(PsiElement psiElement, String methodName) {
@@ -129,9 +123,7 @@ public class JumpToJavaIntention extends BaseIntentionAction {
             PsiElement element = stack.pop();
             if (element instanceof PsiIdentifier) {
                 String methodText = element.getText();
-                if (methodName.equals(methodText)) {
-                    return element;
-                }
+                if (methodName.equals(methodText)) return element;
             }
             Stream.of(element.getChildren()).forEach(stack::push);
         }
