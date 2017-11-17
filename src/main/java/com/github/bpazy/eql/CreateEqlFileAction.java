@@ -8,6 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -21,13 +22,19 @@ public class CreateEqlFileAction extends AnAction {
         PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
         if (!(psiFile instanceof PsiJavaFile)) return;
 
-        LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
         String path = psiFile.getVirtualFile().getParent().getPath().replace("/java/", "/resources/");
-        VirtualFile fileByPath = localFileSystem.findFileByPath(path);
-        if (fileByPath == null) return;
+        VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(path);
 
         try {
-            localFileSystem.createChildFile(null, fileByPath, psiFile.getName().replace(".java", ".eql"));
+            if (fileByPath == null) {
+                boolean mkdirs = new File(path).mkdirs();
+                if (!mkdirs) throw new IOException("创建文件夹失败:" + path);
+            }
+            String eqlPath = psiFile.getVirtualFile().getPath()
+                    .replace("/java/", "/resources/")
+                    .replace(".java", ".eql");
+            boolean newFile = new File(eqlPath).createNewFile();
+            if (!newFile) throw new IOException("创建文件失败:" + eqlPath);
         } catch (IOException e1) {
             e1.printStackTrace();
         }
