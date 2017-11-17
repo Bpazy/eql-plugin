@@ -36,4 +36,10 @@
         </intentionAction>
 
     </extensions>
+    <actions>
+        <action id="createEqlFlieAction" class="com.github.bpazy.eql.CreateEqlFileAction" text="Generate Eql"
+                description="Create eql file action">
+            <add-to-group group-id="JavaGenerateGroup1" anchor="last"/>
+        </action>
+    </actions>
 </idea-plugin>
