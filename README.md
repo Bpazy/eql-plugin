@@ -10,5 +10,9 @@ eql-plugin
 
 
 ## Development
-build: `gradlew buildPlugin`
-debug: `gradlew runIdea`
+当Gradle运行在Debug模式时，会自动下载合适的`Intellij IDEA Community`, `Intellij SDK`, `Source code`，并在当前目录下的`build`目录中生成沙箱数据，用于运行加载了插件的`IDEA Community`。  
+
+第一次运行会下载约400Mb的数据，根据情况需要翻墙下载。
+
+Bulid: `gradlew buildPlugin`  
+Debug: `gradlew runIdea`
