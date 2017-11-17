@@ -121,7 +121,7 @@ public class JumpToJavaIntention extends BaseIntentionAction {
         stack.push(psiElement);
         while (!stack.empty()) {
             PsiElement element = stack.pop();
-            if (element instanceof PsiIdentifier) {
+            if (element instanceof PsiIdentifier && element.getParent() instanceof PsiMethod) {
                 String methodText = element.getText();
                 if (methodName.equals(methodText)) return element;
             }
