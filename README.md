@@ -14,5 +14,5 @@ eql-plugin
 
 第一次运行会下载约400Mb的数据，根据情况需要翻墙下载。
 
-Bulid: `gradlew buildPlugin`  
+Bulid: `gradlew buildPlugin`  
 Debug: `gradlew runIdea`
