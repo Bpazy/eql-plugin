@@ -1,4 +1,6 @@
 eql-plugin
 ===========
-:smile:
-这里应该有一张gif预览图。
+适用于Intellij IDEA的Eql插件
+
+Demo gif
+---------
