@@ -3,6 +3,9 @@ package com.github.bpazy.eql;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -30,11 +33,21 @@ public class CreateEqlFileAction extends AnAction {
                 boolean mkdirs = new File(path).mkdirs();
                 if (!mkdirs) throw new IOException("创建文件夹失败:" + path);
             }
+
             String eqlPath = psiFile.getVirtualFile().getPath()
                     .replace("/java/", "/resources/")
                     .replace(".java", ".eql");
-            boolean newFile = new File(eqlPath).createNewFile();
+            File eqlFile = new File(eqlPath);
+            boolean newFile = eqlFile.createNewFile();
             if (!newFile) throw new IOException("创建文件失败:" + eqlPath);
+
+            Project project = e.getData(CommonDataKeys.PROJECT);
+            if (project == null) return;
+
+            VirtualFile eqlVirtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(eqlFile);
+            if (eqlVirtualFile == null) return;
+            OpenFileDescriptor descriptor = new OpenFileDescriptor(project, eqlVirtualFile);
+            FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
         } catch (IOException e1) {
             e1.printStackTrace();
         }
