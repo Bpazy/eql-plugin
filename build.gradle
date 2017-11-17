@@ -32,7 +32,7 @@ dependencies {
 
 intellij {
     pluginName 'eql-plugin'
-    intellij.updateSinceUntilBuild true // Disables updating since-build attribute in plugin.xml
+    intellij.updateSinceUntilBuild false // Disables updating since-build attribute in plugin.xml
     publish {
         apply from: 'gradle.properties'
     }

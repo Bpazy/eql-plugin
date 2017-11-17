@@ -1,4 +1,4 @@
-package com.github.bpazy.eql;
+package com.github.bpazy.eql.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
