@@ -7,3 +7,8 @@ eql-plugin
 ![generateEqlFile](https://user-images.githubusercontent.com/9838749/32939543-c9b611f4-cbba-11e7-9254-6166ac47c3ae.gif)
 
 跳转到Java或者Eql方法: `Quick fix`(default: Windows: `Alt + Enter`, Mac: `⌥↵`)
+
+
+## Development
+build: `gradlew buildPlugin`
+debug: `gradlew runIdea`
