@@ -90,15 +90,16 @@ public class JumpToJavaIntention extends BaseIntentionAction {
 
             // 打开对应java文件
             OpenFileDescriptor descriptor = new OpenFileDescriptor(project, file1.getVirtualFile());
-            Editor eqlEditor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
-            if (eqlEditor == null) return;
+            Editor javaEditor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
+            if (javaEditor == null) continue;
 
             // 跳转到java文件中函数的位置
-            CaretModel caretModel = eqlEditor.getCaretModel();
+            CaretModel caretModel = javaEditor.getCaretModel();
             LogicalPosition logicalPosition = caretModel.getLogicalPosition();
             logicalPosition.leanForward(true);
             LogicalPosition logical = new LogicalPosition(lineNumber, document.getLineStartOffset(lineNumber));
             caretModel.moveToLogicalPosition(logical);
+            return;
         }
     }
 
