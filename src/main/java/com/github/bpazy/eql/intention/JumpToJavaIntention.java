@@ -1,10 +1,7 @@
 package com.github.bpazy.eql.intention;
 
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
@@ -93,12 +90,16 @@ public class JumpToJavaIntention extends BaseIntentionAction {
             Editor javaEditor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
             if (javaEditor == null) continue;
 
-            // 跳转到java文件中函数的位置
+            // 将光标移动到java文件中函数的位置
             CaretModel caretModel = javaEditor.getCaretModel();
             LogicalPosition logicalPosition = caretModel.getLogicalPosition();
             logicalPosition.leanForward(true);
             LogicalPosition logical = new LogicalPosition(lineNumber, document.getLineStartOffset(lineNumber));
             caretModel.moveToLogicalPosition(logical);
+
+            // 将滚动条定位到光标位置
+            ScrollingModel scrollingModel = editor.getScrollingModel();
+            scrollingModel.scrollToCaret(ScrollType.CENTER);
             return;
         }
     }
