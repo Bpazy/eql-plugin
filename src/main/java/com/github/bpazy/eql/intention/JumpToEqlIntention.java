@@ -125,7 +125,7 @@ public class JumpToEqlIntention extends BaseIntentionAction {
      * @return 函数所在行号，-1则不存在
      */
     private int seekEqlMethod(String packageName, PsiFile file, String methodName) {
-        Document document = FileDocumentManager.getInstance().getCachedDocument(file.getVirtualFile());
+        Document document = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
         if (document == null) {
             return NOT_EXIST_EQL_METHOD;
         }
