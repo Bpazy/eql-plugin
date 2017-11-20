@@ -1,5 +1,6 @@
 package com.github.bpazy.eql.intention;
 
+import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -103,6 +104,7 @@ public class JumpToJavaIntention extends BaseIntentionAction {
             scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE);
             return;
         }
+        HintManager.getInstance().showErrorHint(editor, "Java method not found");
     }
 
     /**
