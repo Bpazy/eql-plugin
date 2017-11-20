@@ -7,6 +7,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.tree.java.PsiLiteralExpressionImpl;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.util.IncorrectOperationException;
 import org.apache.commons.lang.StringUtils;
@@ -76,7 +77,7 @@ public class JumpToJavaIntention extends BaseIntentionAction {
 
         PsiFile[] files = PsiShortNamesCache.getInstance(project).getFilesByName(javaFileName);
         for (PsiFile file1 : files) {
-            PsiElement methodElement = seekJavaMethod(eqlFilePackageName, file1, methodName);
+            PsiElement methodElement = findElement(eqlFilePackageName, file1, methodName);
             if (methodElement == null) continue;
 
             Document document = PsiDocumentManager.getInstance(project).getDocument(file1);
@@ -105,27 +106,34 @@ public class JumpToJavaIntention extends BaseIntentionAction {
     }
 
     /**
-     * 查找Java方法
+     * 查找Java element
      * @param eqlFilePackageName eql文件对应的packageName
      * @param file Java对应文件的PsiFile
      * @param methodName 方法名称
      * @return 查找到的Java方法，没有则返回null
      */
-    private PsiElement seekJavaMethod(String eqlFilePackageName, PsiFile file, String methodName) {
+    private PsiElement findElement(String eqlFilePackageName, PsiFile file, String methodName) {
         String packageName = ((PsiJavaFile) file).getPackageName();
         if (!eqlFilePackageName.equals(packageName)) return null;
 
-        return findMethod(file, methodName);
-    }
-
-    private PsiElement findMethod(PsiElement psiElement, String methodName) {
         Stack<PsiElement> stack = new Stack<>();
-        stack.push(psiElement);
+        stack.push(file);
         while (!stack.empty()) {
             PsiElement element = stack.pop();
             if (element instanceof PsiIdentifier && element.getParent() instanceof PsiMethod) {
                 String methodText = element.getText();
                 if (methodName.equals(methodText)) return element;
+            }
+            Stream.of(element.getChildren()).forEach(stack::push);
+        }
+
+        stack.push(file);
+        while (!stack.empty()) {
+            PsiElement element = stack.pop();
+            PsiElement parent = element.getParent();
+            if (element instanceof PsiJavaToken && parent instanceof PsiLiteralExpression) {
+                String methodText = ((PsiLiteralExpressionImpl) parent).getInnerText();
+                if (methodName.equals(methodText)) return parent;
             }
             Stream.of(element.getChildren()).forEach(stack::push);
         }
