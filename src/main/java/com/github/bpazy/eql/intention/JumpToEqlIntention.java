@@ -86,8 +86,8 @@ public class JumpToEqlIntention extends BaseIntentionAction {
             caretModel.moveToLogicalPosition(logical);
 
             // 将滚动条定位到光标位置
-            ScrollingModel scrollingModel = editor.getScrollingModel();
-            scrollingModel.scrollToCaret(ScrollType.RELATIVE);
+            ScrollingModel scrollingModel = eqlEditor.getScrollingModel();
+            scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE);
             return;
         }
     }
