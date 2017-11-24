@@ -118,6 +118,7 @@ public class JumpToJavaIntention extends BaseIntentionAction {
         String packageName = ((PsiJavaFile) file).getPackageName();
         if (!eqlFilePackageName.equals(packageName)) return null;
 
+        // 寻找Java方法
         Stack<PsiElement> stack = new Stack<>();
         stack.push(file);
         while (!stack.empty()) {
@@ -129,6 +130,7 @@ public class JumpToJavaIntention extends BaseIntentionAction {
             Stream.of(element.getChildren()).forEach(stack::push);
         }
 
+        // 寻找字符串常量
         stack.push(file);
         while (!stack.empty()) {
             PsiElement element = stack.pop();
