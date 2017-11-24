@@ -9,7 +9,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      Release 0.1.6: FIX: 跳转到指定行
+      Release 0.1.7: 跳转失败show error hint
     ]]>
     </change-notes>
 
