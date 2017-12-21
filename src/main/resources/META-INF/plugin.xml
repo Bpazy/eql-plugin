@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.bpazy</id>
     <name>eql-plugin</name>
-    <version>0.1.7</version>
+    <version>0.1.8</version>
     <vendor email="hanziyuan08@outlook.com" url="https://github.com/Bpazy/eql-plugin">Bpazy's Github</vendor>
 
     <description><![CDATA[
@@ -9,7 +9,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      Release 0.1.7: 跳转失败show error hint
+      Release 0.1.8: selectFirst jump
     ]]>
     </change-notes>
 

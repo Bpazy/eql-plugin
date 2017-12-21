@@ -1,5 +1,6 @@
 package com.github.bpazy.eql.intention;
 
+import com.github.bpazy.eql.directory.EqlMethodDirectory;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
 import com.intellij.openapi.editor.*;
@@ -26,7 +27,7 @@ import java.util.regex.Pattern;
 public class JumpToEqlIntention extends BaseIntentionAction {
 
     private final int NOT_EXIST_EQL_METHOD = -1;
-    private final Pattern pattern = Pattern.compile("new (?:Dql|Eql).+(?:insert|delete|select|update)\\(\"(.+)\"\\)");
+    private final Pattern pattern = Pattern.compile("new (?:Dql|Eql).+(?:" + EqlMethodDirectory.toPatternString() + ")\\(\"(.+)\"\\)");
 
     @NotNull
     @Override
