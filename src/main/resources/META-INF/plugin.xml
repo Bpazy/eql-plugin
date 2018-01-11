@@ -1,15 +1,17 @@
 <idea-plugin>
     <id>com.github.bpazy</id>
     <name>eql-plugin</name>
-    <version>0.1.8</version>
-    <vendor email="hanziyuan08@outlook.com" url="https://github.com/Bpazy/eql-plugin">Bpazy's Github</vendor>
+    <version>0.1.9</version>
+    <vendor email="hanziyuan08@outlook.com" url="https://github.com/Bpazy/eql-plugin">eql-plugin Github Page</vendor>
 
     <description><![CDATA[
       Eql plugin.<br>
     ]]></description>
 
     <change-notes><![CDATA[
-      Release 0.1.8: selectFirst jump
+      Release 0.1.9: <br>
+          1.Support 'eql.extension' option<br>
+          2.Only support Intellij IDEA
     ]]>
     </change-notes>
 
