@@ -55,7 +55,8 @@ public class JumpToJavaIntention extends BaseIntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        String javaFileName = file.getName().replace(".eql", ".java");
+        String fileName = file.getName();
+        String javaFileName = fileName.substring(0, fileName.lastIndexOf(".")) + ".java";
 
         int startOffset = editor.getCaretModel().getVisualLineStart();
         int endOffset = editor.getCaretModel().getVisualLineEnd();
@@ -109,9 +110,10 @@ public class JumpToJavaIntention extends BaseIntentionAction {
 
     /**
      * 查找Java element
+     *
      * @param eqlFilePackageName eql文件对应的packageName
-     * @param file Java对应文件的PsiFile
-     * @param methodName 方法名称
+     * @param file               Java对应文件的PsiFile
+     * @param methodName         方法名称
      * @return 查找到的Java方法，没有则返回null
      */
     private PsiElement findElement(String eqlFilePackageName, PsiFile file, String methodName) {
