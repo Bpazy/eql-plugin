@@ -16,18 +16,36 @@ import java.util.regex.Pattern;
  * created on 2018/1/8
  */
 public class EqlStatement {
-    private static final Pattern pattern = Pattern.compile("new (?:Dql|Eql).+(?:" + EqlMethodDirectory.toPatternString() + ")\\(\"(.+)\"\\)");
     public static final int NOT_EXIST_EQL_METHOD = -1;
+    private static final Pattern pattern = Pattern.compile("new (?:Dql|Eql).+(?:" + EqlMethodDirectory.toPatternString() + ")\\(\"(.+)\"\\)");
+    private static final Pattern statementPattern = Pattern.compile("new (?:Dql|Eql).+execute\\(\\)");
 
     private PsiElement psiElement;
     private PsiFile psiFile;
+    /**
+     * 包含完整eql执行流程的表达式
+     */
+    private PsiMethodCallExpression fullEqlExpression;
 
     public EqlStatement(PsiElement psiElement) {
         this.psiElement = psiElement;
         this.psiFile = psiElement.getContainingFile();
+
+        this.fullEqlExpression = initEqlStatement(this.psiElement);
     }
 
-    public String eqlMethodName() {
+    private PsiMethodCallExpression initEqlStatement(PsiElement element) {
+        if (element instanceof PsiMethodCallExpression) {
+            String methodCallExpression = element.getText().replaceAll("[\r\n]", "");
+            Matcher matcher = statementPattern.matcher(methodCallExpression);
+            if (matcher.find()) {
+                return (PsiMethodCallExpression) element;
+            }
+        }
+        return initEqlStatement(element.getParent());
+    }
+
+    private String eqlMethodName() {
         return findEqlMethodName(psiElement);
     }
 
@@ -35,7 +53,7 @@ public class EqlStatement {
         return psiFile.getName().replace(".java", ".eql");
     }
 
-    public String packageName() {
+    private String packageName() {
         return ((PsiJavaFile) psiFile).getPackageName();
     }
 
