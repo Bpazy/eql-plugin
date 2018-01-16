@@ -56,9 +56,9 @@ public class JumpToEqlIntention extends BaseIntentionAction {
         PsiElement psiElement = psiFile.findElementAt(offset);
         if (psiElement == null) return;
 
-        EqlStatement eqlStatement = new EqlStatement(psiElement);
+        EqlStatement eqlStatement = new EqlStatement(project, psiElement);
 
-        PsiFile[] files = PsiShortNamesCache.getInstance(project).getFilesByName(eqlStatement.eqlFileName());
+        PsiFile[] files = PsiShortNamesCache.getInstance(project).getFilesByName(eqlStatement.getEqlFileName());
         for (PsiFile file : files) {
             int lineNum = eqlStatement.seekEqlMethod(file);
             if (lineNum == EqlStatement.NOT_EXIST_EQL_METHOD) continue;

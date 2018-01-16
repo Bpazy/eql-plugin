@@ -1,5 +1,6 @@
 package com.github.bpazy.eql.action;
 
+import com.github.bpazy.eql.base.Configs;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -36,7 +37,7 @@ public class CreateEqlFileAction extends AnAction {
 
             String eqlPath = psiFile.getVirtualFile().getPath()
                     .replace("/java/", "/resources/")
-                    .replace(".java", ".eql");
+                    .replace(".java", Configs.eqlFileExtension);
             File eqlFile = new File(eqlPath);
             boolean newFile = eqlFile.createNewFile();
             if (!newFile) throw new IOException("创建文件失败:" + eqlPath);
