@@ -33,8 +33,7 @@ class CreateEqlFileAction : AnAction() {
                     .replace("/java/", "/resources/")
                     .replace(".java", Configs.eqlFileExtension)
             val eqlFile = File(eqlPath)
-            val newFile = eqlFile.createNewFile()
-            if (!newFile) throw IOException("创建文件失败:" + eqlPath)
+            if (!eqlFile.createNewFile()) throw IOException("创建文件失败:" + eqlPath)
 
             val project = e.getData(CommonDataKeys.PROJECT) ?: return
 
@@ -44,6 +43,5 @@ class CreateEqlFileAction : AnAction() {
         } catch (e1: IOException) {
             e1.printStackTrace()
         }
-
     }
 }

@@ -73,53 +73,44 @@ class EqlStatement(private val project: Project, private val psiElement: PsiElem
         return initEqlStatement(element.parent)
     }
 
-    private val eqlMethodName: String
-        get() = findEqlMethodName(psiElement)
+    private fun eqlMethodName() = findEqlMethodName(psiElement)
 
-    val eqlFileName: String?
-        get() {
-            return if (StringUtils.isNotEmpty(useSqlFileEqlFileName))
-                useSqlFileEqlFileName
-            else
-                psiFile.name.replace(".java", Configs.eqlFileExtension)
-        }
+    public fun eqlFileName(): String? {
+        return if (useSqlFileEqlFileName.isNullOrEmpty()) useSqlFileEqlFileName
+        else psiFile.name.replace(".java", Configs.eqlFileExtension)
+    }
 
-    private val packageName: String?
-        get() {
-            return if (StringUtils.isNotEmpty(useSqlFileEqlPackageName))
-                useSqlFileEqlPackageName
-            else
-                (psiFile as PsiJavaFile).packageName
-        }
+    private fun packageName(): String? {
+        return if (StringUtils.isNotEmpty(useSqlFileEqlPackageName)) useSqlFileEqlPackageName
+        else (psiFile as? PsiJavaFile)?.packageName
+    }
 
     /**
      * Eql文件中对应函数行号
      *
      * @param file eql文件
-     * @return 函数所在行号，-1则不存在
+     * @return 函数所在行号，null则不存在
      */
-    fun seekEqlMethod(file: PsiFile): Int {
-        val document = FileDocumentManager.getInstance().getDocument(file.virtualFile) ?: return NOT_EXIST_EQL_METHOD
-        val text = document.text
-        val reader = BufferedReader(StringReader(text))
+    fun seekEqlMethod(file: PsiFile): Int? {
+        val document = FileDocumentManager.getInstance().getDocument(file.virtualFile) ?: return null
+        val reader = BufferedReader(StringReader(document.text))
 
-        val path = file.virtualFile.path
-        val split = path.split("resources/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        if (split.size < 2) {
-            return NOT_EXIST_EQL_METHOD
-        }
+        val split = file.virtualFile.path
+                .split("resources/".toRegex())
+                .dropLastWhile { it.isEmpty() }
+                .toTypedArray()
+        if (split.size < 2) return null
+
         val eqlFilePackageName = split[1]
                 .substring(0, split[1].lastIndexOf('/'))
                 .replace("/".toRegex(), ".")
-        if (packageName != eqlFilePackageName) {
-            return NOT_EXIST_EQL_METHOD
-        }
+        if (eqlFilePackageName != packageName()) return null
 
         try {
             var lineNum = 0
             var s: String? = reader.readLine()
             while (s != null) {
-                if (s.matches("--\\s*\\[$eqlMethodName]".toRegex())) return lineNum
+                if (s.matches("--\\s*\\[${eqlMethodName()}]".toRegex())) return lineNum
                 lineNum++
                 s = reader.readLine()
                 if (s == null) {
@@ -130,7 +121,7 @@ class EqlStatement(private val project: Project, private val psiElement: PsiElem
             e.printStackTrace()
         }
 
-        return NOT_EXIST_EQL_METHOD
+        return null
     }
 
     private fun findEqlMethodName(psiElement: PsiElement): String {
@@ -145,8 +136,7 @@ class EqlStatement(private val project: Project, private val psiElement: PsiElem
     }
 
     companion object {
-        val NOT_EXIST_EQL_METHOD = -1
-        private val pattern = Pattern.compile("new (?:Dql|Eql)[\\s\\S]+(?:" + EqlMethodDirectory.toPatternString() + ")\\(\"(.+)\"\\)")
+        private val pattern = Pattern.compile("new (?:Dql|Eql)[\\s\\S]+(?:${EqlMethodDirectory.toPatternString()})\\(\"(.+)\"\\)")
         private val statementPattern = Pattern.compile("new (?:Dql|Eql).+execute\\(\\)")
     }
 }

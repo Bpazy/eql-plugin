@@ -30,14 +30,12 @@ class JumpToEqlIntention : BaseIntentionAction() {
     }
 
     override fun isAvailable(project: Project, editor: Editor, psiFile: PsiFile): Boolean {
-        val offset = editor.caretModel.offset
         if (psiFile !is PsiJavaFile) return false
 
-        var psiElement: PsiElement? = psiFile.findElementAt(offset) ?: return false
+        var psiElement = psiFile.findElementAt(editor.caretModel.offset) ?: return false
 
-        if (psiElement is PsiWhiteSpace) {
-            psiElement = psiElement.prevSibling
-        }
+        if (psiElement is PsiWhiteSpace) psiElement = psiElement.prevSibling
+
         val psiElement1 = extraEqlStatement(psiElement) ?: return false
 
         val text = psiElement1.text
@@ -51,10 +49,9 @@ class JumpToEqlIntention : BaseIntentionAction() {
 
         val eqlStatement = EqlStatement(project, psiElement)
 
-        val files = PsiShortNamesCache.getInstance(project).getFilesByName(eqlStatement.eqlFileName!!)
+        val files = PsiShortNamesCache.getInstance(project).getFilesByName(eqlStatement.eqlFileName()!!)
         for (file in files) {
-            val lineNum = eqlStatement.seekEqlMethod(file)
-            if (lineNum == EqlStatement.NOT_EXIST_EQL_METHOD) continue
+            val lineNum = eqlStatement.seekEqlMethod(file) ?: continue
 
             // 打开对应eql文件
             val descriptor = OpenFileDescriptor(project, file.virtualFile)
@@ -76,11 +73,8 @@ class JumpToEqlIntention : BaseIntentionAction() {
     }
 
     private fun extraEqlStatement(element: PsiElement?): PsiElement? {
-        return if (element == null ||
-                element is PsiExpressionStatement ||
-                element is PsiReturnStatement ||
-                element is PsiDeclarationStatement) {
-            element
-        } else extraEqlStatement(element.parent)
+        return if (element == null || element is PsiExpressionStatement ||
+                element is PsiReturnStatement || element is PsiDeclarationStatement) element
+        else extraEqlStatement(element.parent)
     }
 }
