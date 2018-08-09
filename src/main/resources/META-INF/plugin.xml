@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.bpazy</id>
     <name>eql-plugin</name>
-    <version>0.1.10</version>
+    <version>0.1.11</version>
     <vendor email="hanziyuan08@outlook.com" url="https://github.com/Bpazy/eql-plugin">eql-plugin Github Page</vendor>
 
     <description><![CDATA[
@@ -9,7 +9,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      Release 0.1.10: <br>
+      Release 0.1.11: <br>
           Fix #5, #6
     ]]>
     </change-notes>

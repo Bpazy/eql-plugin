@@ -65,8 +65,9 @@ public class JumpToJavaIntention extends BaseIntentionAction {
         Matcher matcher = pattern.matcher(text);
         if (!matcher.find()) return;
 
-        String methodName = matcher.group(1);
-        if (StringUtils.isEmpty(methodName)) return;
+        String methodNameAndAttr = matcher.group(1);
+        if (StringUtils.isEmpty(methodNameAndAttr)) return;
+        String methodName = StringUtils.split(methodNameAndAttr)[0];
 
         String path = file.getVirtualFile().getPath();
         String[] split = path.split("resources/");
