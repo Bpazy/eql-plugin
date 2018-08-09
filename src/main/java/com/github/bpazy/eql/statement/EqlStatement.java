@@ -136,6 +136,7 @@ public class EqlStatement {
             int lineNum = 0;
             String s;
             while ((s = reader.readLine()) != null) {
+                s = s.trim();
                 if (s.matches("--\\s*\\[" + getEqlMethodName() + "]")) return lineNum;
                 lineNum++;
             }

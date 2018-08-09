@@ -9,3 +9,4 @@ src/main/gen
 src/main/java/com/github/bpazy/eql/language
 
 gradle.properties
+*.iml
