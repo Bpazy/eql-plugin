@@ -137,7 +137,7 @@ public class EqlStatement {
             String s;
             while ((s = reader.readLine()) != null) {
                 s = s.trim();
-                if (s.matches("--\\s*\\[" + getEqlMethodName() + "]")) return lineNum;
+                if (s.matches("--\\s*\\[" + getEqlMethodName() + "(\\s*[\\s\\S]*)?\\s*]")) return lineNum;
                 lineNum++;
             }
         } catch (IOException e) {
