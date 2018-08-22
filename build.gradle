@@ -1,37 +1,22 @@
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-        maven {
-            url 'http://dl.bintray.com/jetbrains/intellij-plugin-service'
-        }
-
-    }
-    dependencies {
-        classpath "gradle.plugin.org.jetbrains:gradle-intellij-plugin:0.1.10"
-    }
+plugins {
+    id "org.jetbrains.intellij" version "0.3.0"
 }
 
 apply plugin: 'org.jetbrains.intellij'
-
-group 'com.github.bpazy'
-version '0.1.11'
-
 apply plugin: 'java'
 
 sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
+group 'com.github.bpazy'
+version '0.1.11'
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 intellij {
+    version '2018.2.2'
     pluginName 'eql-plugin'
+    plugins 'coverage'
     intellij.updateSinceUntilBuild false // Disables updating since-build attribute in plugin.xml
     publish {
         apply from: 'gradle.properties'
