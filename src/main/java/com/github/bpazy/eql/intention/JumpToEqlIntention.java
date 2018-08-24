@@ -9,6 +9,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.PsiShortNamesCache;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +40,10 @@ public class JumpToEqlIntention extends BaseIntentionAction {
 
         PsiElement psiElement = psiFile.findElementAt(offset);
         if (psiElement == null) return false;
+
+        PsiClass clazz = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
+        if (clazz == null) return false;
+        if (clazz.getAnnotation("org.n3r.eql.eqler.annotations.EqlerConfig") != null) return true;
 
         if (psiElement instanceof PsiWhiteSpace) {
             psiElement = psiElement.getPrevSibling();

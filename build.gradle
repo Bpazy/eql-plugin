@@ -9,6 +9,10 @@ sourceCompatibility = 1.8
 group 'com.github.bpazy'
 version '0.1.11'
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
