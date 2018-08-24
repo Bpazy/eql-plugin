@@ -74,7 +74,7 @@ public class StatementToEqlFileIntention extends BaseIntentionAction {
         PsiClass psiClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
         EqlAware eqlInterface;
         if (psiClass != null && psiClass.hasAnnotation("org.n3r.eql.eqler.annotations.EqlerConfig")) {
-            eqlInterface = new EqlInterface(psiClass);
+            eqlInterface = new EqlInterface(psiClass, psiElement);
         } else {
             eqlInterface = new EqlStatement(project, psiElement);
         }
