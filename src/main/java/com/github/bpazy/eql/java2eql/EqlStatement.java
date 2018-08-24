@@ -1,10 +1,7 @@
-package com.github.bpazy.eql.statement;
+package com.github.bpazy.eql.java2eql;
 
 import com.github.bpazy.eql.base.Configs;
 import com.github.bpazy.eql.directory.EqlMethodDirectory;
-import com.github.bpazy.eql.extractor.BaseMethodCallExtractor;
-import com.github.bpazy.eql.extractor.UseSqlFileExtractor;
-import com.github.bpazy.eql.extractor.UseSqlFilePackageExtractor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -22,7 +19,7 @@ import java.util.regex.Pattern;
  * @author ziyuan
  * created on 2018/1/8
  */
-public class EqlStatement {
+public class EqlStatement implements EqlAware {
     public static final int NOT_EXIST_EQL_METHOD = -1;
     private static final Pattern pattern = Pattern.compile("new (?:Dql|Eql)[\\s\\S]+(?:" + EqlMethodDirectory.toPatternString() + ")\\(\"(.+)\"\\)");
     private static final Pattern statementPattern = Pattern.compile("new (?:Dql|Eql).+execute\\(\\)");
@@ -33,26 +30,20 @@ public class EqlStatement {
     private String useSqlFileEqlFileName;
     private String useSqlFileEqlPackageName;
 
-    /**
-     * 包含完整eql执行流程的表达式
-     */
-    private PsiMethodCallExpression fullEqlExpression;
-
     public EqlStatement(Project project, PsiElement psiElement) {
         this.project = project;
-
         this.psiElement = psiElement;
         this.psiFile = psiElement.getContainingFile();
 
-        this.fullEqlExpression = initEqlStatement(this.psiElement);
-
-
-        initExtractor();
+        initExtractor(initEqlStatement(this.psiElement));
     }
 
-    private void initExtractor() {
-        BaseMethodCallExtractor useSqlFileExtractor = new UseSqlFileExtractor();
-        BaseMethodCallExtractor useSqlFilePackageNameExtractor = new UseSqlFilePackageExtractor();
+    /**
+     * @param fullEqlExpression 包含完整eql执行流程的表达式
+     */
+    private void initExtractor(PsiMethodCallExpression fullEqlExpression) {
+        MethodCallExtractorAware useSqlFileExtractor = new UseSqlFileExtractor();
+        MethodCallExtractorAware useSqlFilePackageNameExtractor = new UseSqlFilePackageExtractor();
 
 
         Stack<PsiMethodCallExpression> stack = new Stack<>();
@@ -90,17 +81,20 @@ public class EqlStatement {
         return initEqlStatement(element.getParent());
     }
 
-    private String getEqlMethodName() {
-        return findEqlMethodName(psiElement);
-    }
-
+    @Override
     public String getEqlFileName() {
         if (StringUtils.isNotEmpty(useSqlFileEqlFileName)) return useSqlFileEqlFileName;
 
         return psiFile.getName().replace(".java", Configs.eqlFileExtension);
     }
 
-    private String getPackageName() {
+    @Override
+    public String getEqlMethodName() {
+        return findEqlMethodName(psiElement);
+    }
+
+    @Override
+    public String getPackageName() {
         if (StringUtils.isNotEmpty(useSqlFileEqlPackageName)) return useSqlFileEqlPackageName;
 
         return ((PsiJavaFile) psiFile).getPackageName();

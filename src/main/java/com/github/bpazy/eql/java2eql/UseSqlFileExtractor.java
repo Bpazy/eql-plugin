@@ -1,4 +1,4 @@
-package com.github.bpazy.eql.extractor;
+package com.github.bpazy.eql.java2eql;
 
 import com.github.bpazy.eql.base.Configs;
 import com.intellij.openapi.project.Project;
@@ -8,7 +8,7 @@ import com.intellij.psi.impl.source.tree.java.PsiExpressionListImpl;
  * @author ziyuan
  * created on 2018/1/15
  */
-public class UseSqlFileExtractor extends BaseMethodCallExtractor {
+public class UseSqlFileExtractor implements MethodCallExtractorAware {
     @Override
     public boolean filter(String methodName, String argName) {
         return "useSqlFile".equals(methodName);

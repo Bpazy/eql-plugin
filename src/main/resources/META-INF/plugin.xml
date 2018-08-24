@@ -28,7 +28,7 @@
         <!--<lang.parserDefinition language="Eql" implementationClass="com.github.bpazy.eql.language.EqlParserDefinition"/>-->
 
         <intentionAction>
-            <className>com.github.bpazy.eql.intention.JumpToEqlIntention</className>
+            <className>com.github.bpazy.eql.java2eql.StatementToEqlFileIntention</className>
         </intentionAction>
         <intentionAction>
             <className>com.github.bpazy.eql.intention.JumpToJavaIntention</className>

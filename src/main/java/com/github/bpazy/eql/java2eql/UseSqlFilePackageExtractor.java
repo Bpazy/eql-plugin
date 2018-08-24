@@ -1,4 +1,4 @@
-package com.github.bpazy.eql.extractor;
+package com.github.bpazy.eql.java2eql;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
