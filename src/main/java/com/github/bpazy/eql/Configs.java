@@ -2,16 +2,16 @@ package com.github.bpazy.eql;
 
 import com.google.common.collect.Lists;
 import com.intellij.openapi.util.IconLoader;
+import org.n3r.eql.diamond.Dql;
 import org.n3r.eql.eqler.annotations.EqlerConfig;
 import org.n3r.eql.eqler.annotations.Sql;
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
+import org.n3r.eql.eqler.annotations.SqlId;
+import org.n3r.eql.eqler.annotations.UseSqlFile;
 
 import javax.swing.*;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author ziyuan
@@ -21,19 +21,17 @@ public class Configs {
     public final static String eqlFileExtension = ".eql";
     public final static String eqlerConfigAntName = EqlerConfig.class.getName();
     public final static Set<String> eqlSqlAntNames;
-    public final static List<String> eqlSqlAntIdentifiers = Lists.newArrayList("Sql", "UseSqlFile");
+    public final static Set<String> eqlSqlAntSimpleNames;
     public final static Icon eqlIcon = IconLoader.getIcon("eql.png");
+    public final static String dqlName = Dql.class.getName();
 
     public static boolean isEqlSql(String name) {
-        return eqlSqlAntIdentifiers.contains(name);
+        return eqlSqlAntSimpleNames.contains(name);
     }
 
     static {
-        Reflections reflections = new Reflections(
-                new ConfigurationBuilder()
-                        .forPackages("org.n3r.eql.eqler.annotations")
-                        .setScanners(new SubTypesScanner(false))
-                        .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix("org.n3r.eql.eqler.annotations"))));
-        eqlSqlAntNames = reflections.getAllTypes();
+        List<Class> clazzs = Lists.newArrayList(Sql.class, SqlId.class, UseSqlFile.class);
+        eqlSqlAntNames = clazzs.stream().map(Class::getName).collect(Collectors.toSet());
+        eqlSqlAntSimpleNames = clazzs.stream().map(Class::getSimpleName).collect(Collectors.toSet());
     }
 }

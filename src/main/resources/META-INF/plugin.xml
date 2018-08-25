@@ -1,17 +1,18 @@
 <idea-plugin>
     <id>com.github.bpazy</id>
     <name>eql-plugin</name>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
     <vendor email="hanziyuan08@outlook.com" url="https://github.com/Bpazy/eql-plugin">eql-plugin Github Page</vendor>
 
     <description><![CDATA[
       Eql plugin.<br>
-      Change focus between Java code and eql file.
+      Change focus between Java code and eql file.<br>
       Create Eql file with Java code.
     ]]></description>
 
     <change-notes><![CDATA[
-      Java code dao add line marker.
+      <b>Dao</b> add line marker.<br>
+      <b>new Dql()</b> add line marker.
     ]]>
     </change-notes>
 
@@ -34,7 +35,10 @@
         <intentionAction>
             <className>com.github.bpazy.eql.intention.JumpToJavaIntention</className>
         </intentionAction>
-        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.github.bpazy.eql.EqlLineMarker"/>
+        <codeInsight.lineMarkerProvider language="JAVA"
+                                        implementationClass="com.github.bpazy.eql.linemarker.EqlLineMarkerInterface"/>
+        <codeInsight.lineMarkerProvider language="JAVA"
+                                        implementationClass="com.github.bpazy.eql.linemarker.EqlLineMarkerStatement"/>
 
     </extensions>
     <actions>
