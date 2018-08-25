@@ -1,6 +1,6 @@
 package com.github.bpazy.eql.java2eql;
 
-import com.github.bpazy.eql.base.Configs;
+import com.github.bpazy.eql.Configs;
 import com.github.bpazy.eql.directory.EqlMethodDirectory;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;

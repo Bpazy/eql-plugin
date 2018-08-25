@@ -1,6 +1,6 @@
 package com.github.bpazy.eql.java2eql;
 
-import com.github.bpazy.eql.base.Configs;
+import com.github.bpazy.eql.Configs;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.impl.source.tree.java.PsiExpressionListImpl;
 

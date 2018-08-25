@@ -1,6 +1,6 @@
 package com.github.bpazy.eql.action;
 
-import com.github.bpazy.eql.base.Configs;
+import com.github.bpazy.eql.Configs;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

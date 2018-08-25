@@ -1,5 +1,6 @@
 package com.github.bpazy.eql.java2eql;
 
+import com.github.bpazy.eql.Configs;
 import com.github.bpazy.eql.EqlFile;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
@@ -43,7 +44,7 @@ public class StatementToEqlFileIntention extends BaseIntentionAction {
 
         PsiClass eqlInterfacePsiClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
         if (eqlInterfacePsiClass == null) return false;
-        if (eqlInterfacePsiClass.getAnnotation("org.n3r.eql.eqler.annotations.EqlerConfig") != null) return true;
+        if (eqlInterfacePsiClass.getAnnotation(Configs.eqlerConfigAntName) != null) return true;
 
         if (psiElement instanceof PsiWhiteSpace) {
             psiElement = psiElement.getPrevSibling();
@@ -73,7 +74,7 @@ public class StatementToEqlFileIntention extends BaseIntentionAction {
 
         PsiClass psiClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
         EqlAware eqlInterface;
-        if (psiClass != null && psiClass.hasAnnotation("org.n3r.eql.eqler.annotations.EqlerConfig")) {
+        if (psiClass != null && psiClass.hasAnnotation(Configs.eqlerConfigAntName)) {
             eqlInterface = new EqlInterface(psiClass, psiElement);
         } else {
             eqlInterface = new EqlStatement(project, psiElement);

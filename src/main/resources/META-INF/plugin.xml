@@ -1,16 +1,17 @@
 <idea-plugin>
     <id>com.github.bpazy</id>
     <name>eql-plugin</name>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <vendor email="hanziyuan08@outlook.com" url="https://github.com/Bpazy/eql-plugin">eql-plugin Github Page</vendor>
 
     <description><![CDATA[
       Eql plugin.<br>
+      Change focus between Java code and eql file.
+      Create Eql file with Java code.
     ]]></description>
 
     <change-notes><![CDATA[
-      Release 0.2.0: <br>
-          支持dao的到eql的跳转，与eql到dao的跳转
+      Java code dao add line marker.
     ]]>
     </change-notes>
 
@@ -33,6 +34,7 @@
         <intentionAction>
             <className>com.github.bpazy.eql.intention.JumpToJavaIntention</className>
         </intentionAction>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.github.bpazy.eql.EqlLineMarker"/>
 
     </extensions>
     <actions>
