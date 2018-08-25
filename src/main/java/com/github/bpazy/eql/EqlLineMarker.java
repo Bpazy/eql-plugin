@@ -19,6 +19,7 @@ public class EqlLineMarker implements LineMarkerProvider {
     @Nullable
     @Override
     public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element) {
+        // todo add new Dql support
         if (!(element instanceof PsiIdentifier)) return null;
         if (!Configs.isEqlSql(element.getText())) return null;
 
