@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.bpazy</id>
     <name>eql-plugin</name>
-    <version>0.2.2</version>
+    <version>0.2.3</version>
     <vendor email="hanziyuan08@outlook.com" url="https://github.com/Bpazy/eql-plugin">eql-plugin Github Page</vendor>
 
     <description><![CDATA[
@@ -11,8 +11,8 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      <b>Dao</b> add line marker.<br>
-      <b>new Dql()</b> add line marker.
+      <b>Dao</b> interface add line marker.<br>
+      <b>new Dql()</b> statement add line marker.
     ]]>
     </change-notes>
 
