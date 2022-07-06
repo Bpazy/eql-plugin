@@ -1,15 +1,17 @@
 eql-plugin
 ===========
-适用于Intellij IDEA的Eql插件
+适用于 Intellij IDEA 的 [bingoohuang/eql](https://github.com/bingoohuang/eql) 插件。
 
 ## Install
 Install eql-plugin in `Intellij IDEA` or https://plugins.jetbrains.com/plugin/10169-eql-plugin
 
 ## Usage
-#### 生成Eql文件: `Generate code`(default: Windows: `Alt+insert`, Mac: `⌘N`)
+* 生成Eql文件: `Generate code`(default: Windows: `Alt+insert`, Mac: `⌘N`)
+
 ![generateEqlFile](https://user-images.githubusercontent.com/9838749/32939543-c9b611f4-cbba-11e7-9254-6166ac47c3ae.gif)
 
-#### 跳转到Java或者Eql方法: `Quick fix`(default: Windows: `Alt + Enter`, Mac: `⌥↵`)  
+* 跳转到Java或者Eql方法: `Quick fix`(default: Windows: `Alt + Enter`, Mac: `⌥↵`)  
+
 ![jump](https://user-images.githubusercontent.com/9838749/33000817-41a6e2d4-cde5-11e7-9c42-c436042d7bf9.gif)
 
 ## Development
